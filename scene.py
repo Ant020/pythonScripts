@@ -1,14 +1,26 @@
+#Imports
+from math import pi
 import time
 import os
-from math import pi
+import sys
 try:
     import bpy
 except ModuleNotFoundError:
     print("Not in Blender. Exiting...")
     exit()
-    
+
+
+#Set the paths
 selfPath = os.path.dirname(os.path.abspath(__file__))
 parentPath = os.path.dirname(selfPath)
+
+#Set the arguments
+arguments = sys.argv
+if len(arguments) != 6:
+    print("Error: invalid number of arguments")
+    exit()
+mapImagePath = arguments[4]
+heightImagePath = arguments[5]
     
 #clear the scene
 bpy.ops.object.select_all(action='SELECT')
@@ -31,7 +43,7 @@ subdivisionModifier.render_levels = 6
 
 #apply the displacement modifier and set the options
 displacementModifier = plane.modifiers.new(name="displacement", type='DISPLACE')
-heightImagePath = os.path.join(parentPath, r"maps\heightMap.png")
+#heightImagePath = os.path.join(parentPath, r"maps\heightMapStGer.png")
 displacementModifier.strength = 0.3
 
 #create a texture and apply it to the displacement modifier
@@ -43,7 +55,7 @@ material = bpy.data.materials.new(name="mapMaterial")
 material.use_nodes = True
 bsdf = material.node_tree.nodes["Principled BSDF"]
 texImage = material.node_tree.nodes.new("ShaderNodeTexImage")
-mapImagePath = os.path.join(parentPath, r"maps\map.png")
+#mapImagePath = os.path.join(parentPath, r"maps\mapStGer.png")
 texImage.image = bpy.data.images.load(mapImagePath)
 material.node_tree.links.new(bsdf.inputs['Base Color'], texImage.outputs['Color'])
 plane.data.materials.append(material)
@@ -73,5 +85,5 @@ camera.rotation_euler = angles
 
 #save the scene
 bpy.ops.object.mode_set(mode='OBJECT')
-savePath = os.path.join(selfPath, fr"scene{time.time()}.blend")
+savePath = os.path.join(parentPath, fr"blenderFiles\scene{time.time()}.blend")
 bpy.ops.wm.save_as_mainfile(filepath=savePath)
