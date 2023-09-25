@@ -31,7 +31,7 @@ subdivisionModifier.render_levels = 6
 
 #apply the displacement modifier and set the options
 displacementModifier = plane.modifiers.new(name="displacement", type='DISPLACE')
-heightImagePath = os.path.join(parentPath, r"maps\heightMapStGer.png")
+heightImagePath = os.path.join(parentPath, r"maps\heightMap.png")
 displacementModifier.strength = 0.3
 
 #create a texture and apply it to the displacement modifier
@@ -43,7 +43,7 @@ material = bpy.data.materials.new(name="mapMaterial")
 material.use_nodes = True
 bsdf = material.node_tree.nodes["Principled BSDF"]
 texImage = material.node_tree.nodes.new("ShaderNodeTexImage")
-mapImagePath = os.path.join(parentPath, r"maps\mapStGer.png")
+mapImagePath = os.path.join(parentPath, r"maps\map.png")
 texImage.image = bpy.data.images.load(mapImagePath)
 material.node_tree.links.new(bsdf.inputs['Base Color'], texImage.outputs['Color'])
 plane.data.materials.append(material)
