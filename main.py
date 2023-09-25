@@ -1,10 +1,10 @@
 import os
 import psutil
 import subprocess
+import sys
 
 # Fonction pour rechercher le chemin d'accès de Blender
-f = open("myfile.txt", "x") 
-f.close()
+
 def find_blender_path() -> str:
     # Find the path to Blender.exe 
     blender_exe: str = "blender.exe"
@@ -17,8 +17,13 @@ def find_blender_path() -> str:
     
     return None
 
-blenderPath = find_blender_path()
-selfPath = os.path.dirname(os.path.realpath(__file__))
-scenePath = os.path.join(selfPath, "scene.py")
-subprocess.run([blenderPath, "-b", "-P", scenePath])
-print('Done!')
+if __name__ == "__main__":
+    args = sys.argv
+    if len(args) < 3:
+        print("Error: invalid number of arguments")
+        exit()
+    
+    blenderPath = find_blender_path()
+    selfPath = os.path.dirname(os.path.realpath(__file__))
+    scenePath = os.path.join(selfPath, "scene.py")
+    subprocess.run([blenderPath, "-b", "-P", scenePath, args[1], args[2]])
